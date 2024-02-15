@@ -2,7 +2,9 @@ const path=require('path')
 const express=require('express')
 const bodyParser=require('body-parser')
 
-const adminData=require('./routes/admin')
+const errorController=require('./controllers/error')
+
+const adminRoutes=require('./routes/admin')
 const shopRoutes=require('./routes/shop')
 
 const app=express()
@@ -18,15 +20,12 @@ app.use(bodyParser.urlencoded({extended:false}))
 app.use(express.static(path.join(__dirname,'public')))
 //here __dirname = '/../../../app.js  i.e current file location
 
-app.use('/admin',adminData.routes)
+app.use('/admin',adminRoutes)
 app.use(shopRoutes)
 
 
 //This route is for page not found(very last middleware)
-app.use((req,res,next)=>{
-    // res.status(404).sendFile(path.join(__dirname,'views','404.html'))
-    res.status(404).render('404',{pageTitle:'not found page'})
-})
+app.use(errorController.get404)
 
 
 // const server = http.createServer(app);
