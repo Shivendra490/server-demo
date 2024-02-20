@@ -19,7 +19,7 @@ exports.getProducts = (req, res, next) => {
       path: "/products",
     });
   });
-  //static method of class can be directly call without creatin obj,i.e classname.staticMethod()
+  //static method of class can be directly call without creating obj,i.e classname.staticMethod()
   // res.sendFile(path.join(__dirname,'../','views','shop.html'))
 };
 
@@ -37,7 +37,27 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  res.render("shop/cart", { pageTitle: "Your Cart", path: "/cart" });
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      const cartProducts = [];
+      for (let product of products) {
+        const cartProductData = cart.products.find(
+          (prd) => prd.id === product.id
+        );
+        if (cartProductData) {
+          cartProducts.push({
+            productData: product,
+            quantity: cartProductData.quantity,
+          });
+        }
+      }
+      res.render("shop/cart", {
+        products: cartProducts,
+        pageTitle: "Your Cart",
+        path: "/cart",
+      });
+    });
+  });
 };
 
 exports.postCart = (req, res, next) => {
@@ -46,6 +66,14 @@ exports.postCart = (req, res, next) => {
     Cart.addProductToCart(product.id, product.price);
   });
   res.redirect("/cart");
+};
+
+exports.postCartDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findById(prodId, (product) => {
+    Cart.deleteProduct(prodId, product.price);
+    res.redirect("/cart");
+  });
 };
 
 exports.getOrders = (req, res, next) => {
