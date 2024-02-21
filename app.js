@@ -6,6 +6,7 @@ const errorController=require('./controllers/error')
 
 const adminRoutes=require('./routes/admin')
 const shopRoutes=require('./routes/shop')
+const db=require('./util/database')
 
 const app=express()
 
@@ -22,6 +23,8 @@ app.use(express.static(path.join(__dirname,'public')))
 
 app.use('/admin',adminRoutes)
 app.use(shopRoutes)
+
+// db.execute('SELECT  * FROM products').then((result)=>console.log(result[0][0])).catch((err)=>console.log(err))
 
 
 //This route is for page not found(very last middleware)

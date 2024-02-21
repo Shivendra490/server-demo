@@ -2,38 +2,43 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/index", {
-      prods: products,
-      pageTitle: "shop index",
-      path: "/",
-    });
-  });
+  Product.fetchAll()
+    .then(([rows,fieldData]) => {
+      res.render("shop/index", {
+        prods: rows,
+        pageTitle: "shop index",
+        path: "/",
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/product-list", {
-      prods: products,
-      pageTitle: "Product list",
-      path: "/products",
-    });
-  });
+
+Product.fetchAll()
+    .then(([rows]) => {
+      res.render("shop/product-list", {
+        prods: rows,
+        pageTitle: "Product list",
+        path: "/products",
+      });
+    })
+    .catch((err) => console.log(err));
   //static method of class can be directly call without creating obj,i.e classname.staticMethod()
   // res.sendFile(path.join(__dirname,'../','views','shop.html'))
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId, (product) => {
-    console.log("here24 why", product);
+  Product.findById(prodId).then(([product])=>{
+    // console.log('prd',product[0],'prdd');
     res.render("shop/product-details", {
-      product: product,
+      product: product[0],
       path: "/details",
       pageTitle: "hey",
       path: "/products",
     });
-  });
+  }).catch(err=>console.log(err));
 };
 
 exports.getCart = (req, res, next) => {
