@@ -2,43 +2,48 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
-    .then(([rows,fieldData]) => {
-      res.render("shop/index", {
-        prods: rows,
-        pageTitle: "shop index",
-        path: "/",
-      });
-    })
-    .catch((err) => console.log(err));
+  Product.findAll().then(products=>{
+    res.render("shop/index", {
+      prods: products,
+      pageTitle: "shop index",
+      path: "/",
+    });
+  }).catch(err=>console.log(err))
+  
 };
 
 exports.getProducts = (req, res, next) => {
+  Product.findAll().then(products=>{
+    console.log('prd',products)
+    res.render("shop/product-list", {
+      prods: products,
+      pageTitle: "Product list",
+      path: "/products",
+    });
+  }).catch(err=>console.log(err))
 
-Product.fetchAll()
-    .then(([rows]) => {
-      res.render("shop/product-list", {
-        prods: rows,
-        pageTitle: "Product list",
-        path: "/products",
-      });
-    })
-    .catch((err) => console.log(err));
-  //static method of class can be directly call without creating obj,i.e classname.staticMethod()
-  // res.sendFile(path.join(__dirname,'../','views','shop.html'))
+   
+  
 };
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId).then(([product])=>{
-    // console.log('prd',product[0],'prdd');
+  Product.findAll({where:{id:prodId}}).then((products)=>{
     res.render("shop/product-details", {
-      product: product[0],
+      product: products[0],
       path: "/details",
-      pageTitle: "hey",
+      pageTitle: products[0].title,
       path: "/products",
     });
   }).catch(err=>console.log(err));
+  // Product.findByPk(prodId).then((product)=>{
+  //   res.render("shop/product-details", {
+  //     product: product,
+  //     path: "/details",
+  //     pageTitle: "hey",
+  //     path: "/products",
+  //   });
+  // }).catch(err=>console.log(err));
 };
 
 exports.getCart = (req, res, next) => {
