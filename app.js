@@ -7,6 +7,11 @@ const errorController = require("./controllers/error");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const sequelize = require("./util/database");
+const Product = require("./models/product");
+const User = require("./models/user");
+const Cart=require('./models/cart')
+const CartItem=require('./models/cart-item')
+
 
 const app = express();
 
@@ -21,6 +26,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 //here __dirname = '/../../../app.js  i.e current file location
 
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user; 
+      next()//here this user is not just js obj but a sequelize obj so that we can use seq methods like save() or destroy() etc
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
@@ -33,10 +49,29 @@ app.use(errorController.get404);
 
 // server.listen(3000);
 
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+User.hasOne(Cart)
+Cart.belongsTo(User)
+Cart.belongsToMany(Product,{through:CartItem})
+Product.belongsToMany(Cart,{through:CartItem}) // through=> telling sequilize, where these connection to be stored 
+
 sequelize
-  .sync()
+  .sync() //{force:true}will create table again if exist ,we should not use this in production
   .then((result) => {
-    // console.log(result);
-    app.listen(8000);
+    // console.log('teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest',result);
+    return User.findByPk(1); //here we are just simulating user i.e dummy user for now
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({ id: 1, name: "Ram", email: "ram@gmail.com" });
+    }
+    return user;
+  })
+  .then((user) => {
+    console.log('teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeegggggggggggggeeeeeeeeeesttteeeeeeeerrrrrruuuuyyyy');
+    return user.createCart()
+  }).then(cart=>{
+    app.listen(8000)
   })
   .catch((err) => console.log(err));

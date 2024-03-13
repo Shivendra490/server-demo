@@ -2,7 +2,7 @@
 
 const express=require('express')
 const adminController=require('../controllers/admin')
-const rootDir=require('../util/path')
+// const rootDir=require('../util/path')
 
 const router=express.Router()
 
