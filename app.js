@@ -11,6 +11,8 @@ const Product = require("./models/product");
 const User = require("./models/user");
 const Cart=require('./models/cart')
 const CartItem=require('./models/cart-item')
+const Order=require("./models/order")
+const OrderItem=require("./models/order-item")
 
 
 const app = express();
@@ -55,11 +57,14 @@ User.hasOne(Cart)
 Cart.belongsTo(User)
 Cart.belongsToMany(Product,{through:CartItem})
 Product.belongsToMany(Cart,{through:CartItem}) // through=> telling sequilize, where these connection to be stored 
+Order.belongsTo(User)
+User.hasMany(Order)
+Order.belongsToMany(Product,{through:OrderItem})
+
 
 sequelize
   .sync() //{force:true}will create table again if exist ,we should not use this in production
   .then((result) => {
-    // console.log('teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeest',result);
     return User.findByPk(1); //here we are just simulating user i.e dummy user for now
   })
   .then((user) => {
@@ -69,7 +74,6 @@ sequelize
     return user;
   })
   .then((user) => {
-    console.log('teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeegggggggggggggeeeeeeeeeesttteeeeeeeerrrrrruuuuyyyy');
     return user.createCart()
   }).then(cart=>{
     app.listen(8000)
