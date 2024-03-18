@@ -2,12 +2,13 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 
-const mongoConnect=require("./util/database")
+const mongoConnect=require("./util/database").mongoConnect
+const User=require('./models/user')
 
 const errorController = require("./controllers/error");
 
-// const adminRoutes = require("./routes/admin");
-// const shopRoutes = require("./routes/shop");
+const adminRoutes = require("./routes/admin");
+const shopRoutes = require("./routes/shop");
 
 
 
@@ -25,27 +26,27 @@ app.use(express.static(path.join(__dirname, "public")));
 //here __dirname = '/../../../app.js  i.e current file location
 
 app.use((req, res, next) => {
-  // User.findByPk(1)
-  //   .then((user) => {
-  //     req.user = user; 
-  //     next()//here this user is not just js obj but a sequelize obj so that we can use seq methods like save() or destroy() etc
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //   });
+  User.findById("65f81bc8b250de4de45788a9")
+    .then((user) => {
+      req.user = user; 
+      next()
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
 });
 
-// app.use("/admin", adminRoutes);
-// app.use(shopRoutes);
+app.use("/admin", adminRoutes);
+app.use(shopRoutes);
 
-// db.execute('SELECT  * FROM products').then((result)=>console.log(result[0][0])).catch((err)=>console.log(err))
+
 
 //This route is for page not found(very last middleware)
 app.use(errorController.get404);
 
 
-mongoConnect((client)=>{
-  console.log("cccccccc",client)
+mongoConnect(()=>{
   app.listen(8000)
 })
 
