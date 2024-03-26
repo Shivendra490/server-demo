@@ -46,7 +46,7 @@ class Product {
     const db = getDb();
     return db
       .collection("products")
-      .find({_id: new mongodb.ObjectId(prodId) } )//find() return corsor obj we can use toArray() or next()
+      .find({_id: new mongodb.ObjectId(prodId) } )//find() return cursor obj we can use toArray() or next()
       .next()
       .then((product) => {
         console.log('prprprprpprprpr',product)

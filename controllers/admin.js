@@ -10,7 +10,14 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
-  const product = new Product(title, price, description, imageUrl,null,req.user?._id);
+  const product = new Product(
+    title,
+    price,
+    description,
+    imageUrl,
+    null,
+    req.user?._id
+  );
   product
     .save()
     .then((result) => {
@@ -70,7 +77,7 @@ exports.getProducts = (req, res, next) => {
       path: "/admin/products",
     });
   });
-}
+};
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;

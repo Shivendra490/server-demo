@@ -10,9 +10,9 @@
             Nothing here in orders
         <%} else {%>
             <%orders.forEach((order)=>{%>
-                #<%=order.id%>
-                <%order.products.forEach(product=>{%>
-                <li><%=product.title%> (<%=product.orderItem.quantity%>)</li>
+                #<%=order._id%>
+                <%order.items.forEach(product=>{%>
+                <li><%=product.title%> (<%=product.quantity%>)</li>
                 <%})%>
             <%})%>  
           <%}%>    
