@@ -1,8 +1,9 @@
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose=require("mongoose")
 
-const mongoConnect = require("./util/database").mongoConnect;
+
 const User = require("./models/user");
 
 const errorController = require("./controllers/error");
@@ -22,22 +23,29 @@ app.use(express.static(path.join(__dirname, "public")));
 //here __dirname = '/../../../app.js  i.e current file location
 
 app.use((req, res, next) => {
-  User.findById("65f81bc8b250de4de45788a9")
+  User.findById("66081cb2ba926885e1bb35e2")
     .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
+      req.user = user//this is mongoose user obj not just simply js obj so that it have all methods provided by mongoose
       next();
     })
     .catch((err) => {
       console.log(err);
     });
+
 });
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
-//This route is for page not found(very last middleware)
+
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  app.listen(8000);
-});
+mongoose.connect("mongodb+srv://user1:users1786@cluster1.jt6igif.mongodb.net/shops?retryWrites=true&w=majority&appName=Cluster1").then(result=>{
+  User.findOne().then(user=>{
+    if(!user){
+      const user=new User({name:'Ram',email:'ram@gmail.com',cart:{items:[]}})
+      user.save()
+    }
+  })
+  app.listen(8000)
+}).catch(err=>console.log(err))
