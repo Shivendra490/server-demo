@@ -11,8 +11,8 @@
         <%} else {%>
             <%orders.forEach((order)=>{%>
                 #<%=order._id%>
-                <%order.items.forEach(product=>{%>
-                <li><%=product.title%> (<%=product.quantity%>)</li>
+                <%order.products.forEach(prd=>{%>
+                <li><%=prd.product.title%> (<%=prd.quantity%>)</li>
                 <%})%>
             <%})%>  
           <%}%>    
