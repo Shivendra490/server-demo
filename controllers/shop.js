@@ -3,15 +3,15 @@ const Product = require("../models/product");
 
 exports.getIndex = (req, res, next) => {
   // const isLoggedIn=req.get('Cookie')
-  const isLoggedIn=req.session.isLoggedIn
-  // console.log('sess',req.session)
+  // const isLoggedIn=req.session.isLoggedIn
+  
   Product.find()
     .then((products) => {
       res.render("shop/index", {
         prods: products,
         pageTitle: "shop index",
         path: "/",
-        isAuthenticated:isLoggedIn
+        isAuthenticated:req.session.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -24,7 +24,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: "Product list",
         path: "/products",
-        isAuthenticated:req.isLoggedIn
+        isAuthenticated:req.session.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -39,7 +39,7 @@ exports.getProduct = (req, res, next) => {
         path: "/details",
         pageTitle: product.title,
         path: "/products",
-        isAuthenticated:req.isLoggedIn
+        isAuthenticated:req.session.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -55,7 +55,7 @@ exports.getCart = (req, res, next) => {
         products: products,
         pageTitle: "Your Cart",
         path: "/cart",
-        isAuthenticated:req.isLoggedIn
+        isAuthenticated:req.session.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -110,12 +110,12 @@ exports.getOrders = (req, res, next) => {
         pageTitle: "Your Orders",
         path: "/orders",
         orders: orders,
-        isAuthenticated:req.isLoggedIn
+        isAuthenticated:req.session.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
 };
 
 exports.getCheckout = (req, res, next) => {
-  res.render("shop/checkout", { pageTitle: "Your Cart", path: "/checkout", isAuthenticated:req.isLoggedIn });
+  res.render("shop/checkout", { pageTitle: "Your Cart", path: "/checkout", isAuthenticated:req.session.isLoggedIn });
 };
