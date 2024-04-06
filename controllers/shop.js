@@ -2,12 +2,14 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 
 exports.getIndex = (req, res, next) => {
+  const isLoggedIn=req.get('Cookie').trim()
   Product.find()
     .then((products) => {
       res.render("shop/index", {
         prods: products,
         pageTitle: "shop index",
         path: "/",
+        isAuthenticated:isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -20,6 +22,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: "Product list",
         path: "/products",
+        isAuthenticated:req.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -34,6 +37,7 @@ exports.getProduct = (req, res, next) => {
         path: "/details",
         pageTitle: product.title,
         path: "/products",
+        isAuthenticated:req.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -49,6 +53,7 @@ exports.getCart = (req, res, next) => {
         products: products,
         pageTitle: "Your Cart",
         path: "/cart",
+        isAuthenticated:req.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
@@ -103,11 +108,12 @@ exports.getOrders = (req, res, next) => {
         pageTitle: "Your Orders",
         path: "/orders",
         orders: orders,
+        isAuthenticated:req.isLoggedIn
       });
     })
     .catch((err) => console.log(err));
 };
 
 exports.getCheckout = (req, res, next) => {
-  res.render("shop/checkout", { pageTitle: "Your Cart", path: "/checkout" });
+  res.render("shop/checkout", { pageTitle: "Your Cart", path: "/checkout", isAuthenticated:req.isLoggedIn });
 };
