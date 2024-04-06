@@ -2,7 +2,9 @@ const Order = require("../models/order");
 const Product = require("../models/product");
 
 exports.getIndex = (req, res, next) => {
-  const isLoggedIn=req.get('Cookie').trim()
+  // const isLoggedIn=req.get('Cookie')
+  const isLoggedIn=req.session.isLoggedIn
+  // console.log('sess',req.session)
   Product.find()
     .then((products) => {
       res.render("shop/index", {
