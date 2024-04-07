@@ -7,7 +7,7 @@
     <%- include('../includes/navigation.ejs') %>
 
     <main>
-        <form class="login-form" action="/login" method="POST">
+        <form class="login-form" action="/signup" method="POST">
             <div class="form-control">
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email">
@@ -16,7 +16,11 @@
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password">
             </div>
-            <button type="submit" class="btn">Login</button>
+            <div class="form-control">
+                <label for="confirmPassword">Password</label>
+                <input type="password" name="confirmPassword" id="confirmPassword">
+            </div>
+            <button type="submit" class="btn">Signup</button>
         </form>
     </main>
 <%- include('../includes/end.ejs') %>

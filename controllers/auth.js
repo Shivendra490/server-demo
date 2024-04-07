@@ -7,6 +7,14 @@ exports.getLogin = (req, res, next) => {
       });
 };
 
+exports.getSignup = (req, res, next) => {
+  res.render("auth/signup", {
+      pageTitle: "Signup",
+      path: "/signup",
+      isAuthenticated:false
+    });
+};
+
 exports.postLogin = (req, res, next) => {
   // res.setHeader('Set-Cookie','loggedIn=true')
   User.findById("66081cb2ba926885e1bb35e2")
@@ -22,6 +30,21 @@ exports.postLogin = (req, res, next) => {
       console.log(err);
     });
   
+};
+
+exports.postSignup = (req, res, next) => {
+ const {email,password,confirmPassword}=req.body
+ //we can validate here later
+  User.findOne({email:email}).then(isUser=>{
+    if(isUser){
+      return res.redirect('/signup')
+    }
+    const user=new User({email:email,password:password,cart:{items:[]}})
+    return user.save()
+  })
+  .then(result=>{
+    res.redirect("/login")
+  }).catch(err=>console.log(err))
 };
 
 exports.postLogout=(req,res,next)=>{
