@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose=require("mongoose")
 const session=require("express-session")
 const MongoDBStore=require("connect-mongodb-session")(session)
+const flash=require('connect-flash')
 
 
 const User = require("./models/user");
@@ -29,6 +30,7 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(session({secret:'my secret',resave:false,saveUninitialized:false,store:store}))
+app.use(flash())
 //to grant access of read only to public folder's file
 app.use(express.static(path.join(__dirname, "public")));
 //here __dirname = '/../../../app.js  i.e current file location

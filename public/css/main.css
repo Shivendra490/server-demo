@@ -155,3 +155,18 @@ main {
   background-color: #00695c;
   color: white;
 }
+
+.user-message{
+  width:90%;
+  margin:auto;
+  padding:1rem;
+  background-color: blue;
+  color:white;
+  text-align:center
+}
+
+.user-message--error{
+  background-color: rgb(210, 89, 89);
+  color:white;
+  border:red;
+}
